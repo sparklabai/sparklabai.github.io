@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Spark Lab, AI for Real Life | May 2026</title>
+<meta name="description" content="A 4-weekend hands-on AI program for school students and adults. Build something real. No coding. No experience needed."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a26;--surface:#1e1e2e;--surface2:#252538;--border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);--accent:#7c5cfc;--accent2:#a78bfa;--accent3:#38bdf8;--accent4:#f472b6;--accent5:#34d399;--gold:#fbbf24;--red:#f87171;--text:#f1f0ff;--text2:#c4c2db;--text3:#8b89a8;--r:16px;--r2:24px;--r3:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+h1,h2,h3,h4{font-family:"Sora",sans-serif;line-height:1.25}
+a{color:inherit;text-decoration:none}
+.lang-en .hi{display:none}.lang-hi .en{display:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(10,10,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:"Sora",sans-serif;font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:6px}
+.nav-right{display:flex;align-items:center;gap:12px}
+.lang-toggle{display:flex;align-items:center;background:var(--surface);border-radius:50px;padding:3px;border:1px solid var(--border2)}
+.lang-btn{padding:5px 14px;border-radius:50px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .25s;background:transparent;color:var(--text3);border:none;font-family:"Inter",sans-serif}
+.lang-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(124,92,252,.4)}
+.nav-cta{padding:8px 18px;border-radius:50px;font-size:.82rem;font-weight:700;background:var(--accent);color:#fff;cursor:pointer;transition:all .25s;border:none;font-family:"Inter",sans-serif;box-shadow:0 2px 16px rgba(124,92,252,.35)}
+.nav-cta:hover{background:var(--accent2);transform:translateY(-1px)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 20px 80px;position:relative;overflow:hidden;text-align:center}
+.hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,92,252,.18) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(56,189,248,.12) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 20% 60%,rgba(244,114,182,.10) 0%,transparent 60%)}
+.floating-orbs{position:absolute;inset:0;z-index:0;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.15;animation:orb-float 8s ease-in-out infinite}
+.orb1{width:320px;height:320px;background:var(--accent);top:5%;left:-5%}
+.orb2{width:200px;height:200px;background:var(--accent3);top:60%;right:-2%;animation-delay:-3s}
+.orb3{width:250px;height:250px;background:var(--accent4);bottom:-5%;left:40%;animation-delay:-6s}
+@keyframes orb-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+.hero-content{position:relative;z-index:1;max-width:840px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.35);border-radius:50px;padding:6px 16px;font-size:.78rem;font-weight:600;color:var(--accent2);margin-bottom:28px;letter-spacing:.06em;text-transform:uppercase}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent5);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:800;letter-spacing:-.02em;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,var(--accent2) 50%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-tagline{font-size:clamp(1rem,2.5vw,1.3rem);font-weight:600;color:var(--text2);margin-bottom:24px}
+.hero-tagline em{font-style:normal;color:var(--gold)}
+.hero-desc{font-size:clamp(.9rem,2vw,1.05rem);color:var(--text3);max-width:620px;margin:0 auto 36px;line-height:1.75}
+.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.btn-primary{padding:14px 32px;border-radius:50px;font-weight:700;font-size:.95rem;background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;cursor:pointer;border:none;font-family:"Inter",sans-serif;box-shadow:0 4px 24px rgba(124,92,252,.4);transition:all .25s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,92,252,.5)}
+.btn-secondary{padding:14px 28px;border-radius:50px;font-weight:600;font-size:.9rem;background:transparent;color:var(--text2);cursor:pointer;border:1px solid var(--border2);font-family:"Inter",sans-serif;transition:all .25s}
+.btn-secondary:hover{border-color:var(--accent2);color:var(--accent2)}
+.hero-stats{display:flex;justify-content:center;gap:36px;flex-wrap:wrap}
+.hero-stat .num{font-size:1.8rem;font-weight:800;font-family:"Sora",sans-serif;background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat .lbl{font-size:.75rem;color:var(--text3);font-weight:500}
+.scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text3);font-size:.72rem;letter-spacing:.1em;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+section{padding:80px 20px;max-width:1100px;margin:0 auto}
+.full-divider{width:100%;height:1px;background:var(--border)}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.25);padding:4px 14px;border-radius:50px;margin-bottom:16px}
+.section-title{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin-bottom:14px;letter-spacing:-.01em}
+.section-sub{color:var(--text3);font-size:1rem;line-height:1.7;max-width:600px}
+.section-header{margin-bottom:48px}
+.audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.audience-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:36px 28px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+.audience-card:hover{transform:translateY(-4px);border-color:var(--border2)}
+.audience-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+.audience-card.kids::before{background:linear-gradient(90deg,var(--accent),var(--accent4))}
+.audience-card.adults::before{background:linear-gradient(90deg,var(--accent3),var(--accent5))}
+.audience-icon{font-size:2.4rem;margin-bottom:14px}
+.audience-card h3{font-size:1.25rem;font-weight:700;margin-bottom:10px}
+.audience-card p{color:var(--text3);font-size:.92rem;line-height:1.7}
+.audience-bullets{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.audience-bullet{display:flex;align-items:flex-start;gap:10px;font-size:.875rem;color:var(--text2)}
+.audience-bullet::before{content:"\2192";color:var(--accent2);font-weight:700;flex-shrink:0}
+.projects-group{margin-bottom:48px}
+.projects-group-label{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.grp-icon{font-size:1.6rem}
+.projects-group-label h3{font-size:1.1rem;font-weight:700}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 20px;transition:all .25s;position:relative;overflow:hidden}
+.project-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 4px 32px rgba(124,92,252,.15)}
+.proj-emoji{font-size:2rem;margin-bottom:10px;display:block}
+.proj-title{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.proj-desc{font-size:.82rem;color:var(--text3);line-height:1.6}
+.proj-badge{position:absolute;top:14px;right:14px;font-size:.65rem;font-weight:700;letter-spacing:.06em;padding:3px 9px;border-radius:50px;text-transform:uppercase}
+.badge-web{background:rgba(124,92,252,.2);color:var(--accent2)}
+.badge-tool{background:rgba(56,189,248,.15);color:var(--accent3)}
+.badge-creative{background:rgba(244,114,182,.15);color:var(--accent4)}
+.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.learn-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 20px;display:flex;gap:16px;align-items:flex-start;transition:border-color .25s}
+.learn-item:hover{border-color:rgba(124,92,252,.35)}
+.learn-icon{width:42px;height:42px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.li-pu{background:rgba(124,92,252,.15)}.li-bl{background:rgba(56,189,248,.12)}.li-pk{background:rgba(244,114,182,.12)}.li-gr{background:rgba(52,211,153,.12)}.li-go{background:rgba(251,191,36,.12)}
+.learn-text h4{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.learn-text p{font-size:.83rem;color:var(--text3);line-height:1.6}
+.not-list{margin-top:36px}
+.not-list h3{font-size:1.05rem;font-weight:700;margin-bottom:18px;color:var(--text2)}
+.not-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r3);background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.12);margin-bottom:10px;font-size:.875rem;color:var(--text2)}
+.not-item::before{content:"\00D7";color:var(--red);font-weight:700;flex-shrink:0;font-size:1rem}
+.weekend-block{margin-bottom:32px}
+.weekend-label{display:flex;align-items:center;gap:12px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);margin-bottom:14px}
+.wk-line{flex:1;height:1px;background:rgba(56,189,248,.2)}
+.sessions-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.session-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;transition:all .25s}
+.session-card:hover{border-color:rgba(124,92,252,.3);transform:translateY(-2px)}
+.session-num{font-size:.7rem;font-weight:800;letter-spacing:.12em;color:var(--accent3);text-transform:uppercase;margin-bottom:8px}
+.session-card h4{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.session-card p{font-size:.82rem;color:var(--text3);line-height:1.6}
+.session-card.special{border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.04)}
+.session-card.optional::after{content:"Optional";position:absolute;top:12px;right:12px;font-size:.62rem;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:50px;background:rgba(251,191,36,.15);color:var(--gold);text-transform:uppercase}
+.tools-grid{display:flex;flex-wrap:wrap;gap:12px}
+.tool-chip{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:8px 18px;font-size:.85rem;font-weight:500;transition:all .25s}
+.tool-chip:hover{border-color:var(--border2);background:var(--surface2)}
+.tool-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tool-free{font-size:.65rem;font-weight:700;letter-spacing:.06em;color:var(--accent5);text-transform:uppercase;background:rgba(52,211,153,.1);padding:2px 7px;border-radius:50px;margin-left:4px}
+.tools-note{margin-top:28px;padding:18px 22px;border-radius:var(--r);background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);font-size:.88rem;color:var(--text2);display:flex;gap:12px;align-items:flex-start}
+.timeline-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tl-card.showcase-full{grid-column:1/-1}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 20px;position:relative;transition:all .25s}
+.tl-card:hover{border-color:var(--border2)}
+.tl-card.hi-light{border-color:rgba(124,92,252,.35);background:rgba(124,92,252,.06)}
+.tl-card.open-now{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.05)}
+.tl-date{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px}
+.tl-card.open-now .tl-date{color:var(--accent5)}
+.tl-card h4{font-size:.98rem;font-weight:700;margin-bottom:5px}
+.tl-card p{font-size:.82rem;color:var(--text3);line-height:1.6}
+.tl-badge{position:absolute;top:14px;right:14px;font-size:.62rem;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:50px;text-transform:uppercase}
+.tl-badge.live{background:rgba(52,211,153,.15);color:var(--accent5)}
+.tl-badge.hurry{background:rgba(251,191,36,.15);color:var(--gold)}
+.fee-wrap{background:linear-gradient(135deg,rgba(124,92,252,.05) 0%,rgba(56,189,248,.03) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.fee-main{background:var(--surface);border:1px solid rgba(124,92,252,.3);border-radius:var(--r2);padding:40px 36px;margin-bottom:32px;box-shadow:0 0 60px rgba(124,92,252,.1);position:relative;overflow:hidden}
+.fee-main::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--accent4))}
+.fee-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:32px}
+.fee-lbl{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.fee-amt{font-size:3rem;font-weight:900;font-family:"Sora",sans-serif;background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.fee-amt sub{font-size:1.3rem;font-weight:700;vertical-align:top;margin-top:8px;margin-right:2px}
+.fee-per{font-size:.8rem;color:var(--text3);margin-top:4px}
+.fee-early{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:var(--r);padding:18px 22px;text-align:center}
+.early-tag{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.early-price{font-size:2rem;font-weight:800;color:var(--gold);font-family:"Sora",sans-serif}
+.early-save{font-size:.78rem;color:var(--text3);margin-top:4px}
+.fee-perks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0}
+.fee-perk{display:flex;gap:10px;align-items:center;font-size:.85rem;color:var(--text2)}
+.ck{color:var(--accent5);font-size:1rem;flex-shrink:0}
+.fee-steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:32px}
+.fee-step{display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg3);border-radius:var(--r3);border:1px solid var(--border)}
+.fee-step-n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.fee-step h5{font-size:.88rem;font-weight:700;margin-bottom:3px}
+.fee-step p{font-size:.78rem;color:var(--text3);line-height:1.5}
+.disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.disc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px 20px;text-align:center}
+.disc-icon{font-size:2rem;margin-bottom:10px}
+.disc-amt{font-size:1.5rem;font-weight:800;color:var(--accent2);font-family:"Sora",sans-serif;margin-bottom:4px}
+.disc-card h4{font-size:.92rem;font-weight:700;margin-bottom:6px}
+.disc-card p{font-size:.8rem;color:var(--text3);line-height:1.6}
+.fee-zero{padding:18px 22px;border-radius:var(--r);background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);font-size:.9rem;color:var(--text2);display:flex;gap:12px;align-items:center}
+
+/* Fixed Idea Box CSS */
+.idea-box {
+  margin: 32px auto;
+  padding: 18px 24px;
+  border-radius: 14px;
+  background: rgba(167,139,250,0.08);
+  border: 1px solid rgba(167,139,250,0.25);
+  max-width: 680px;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.idea-box-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.idea-box p {
+  font-size: .9rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.inst-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:40px 36px;display:flex;gap:40px;align-items:flex-start}
+.inst-avatar{width:110px;height:110px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--accent3));display:flex;align-items:center;justify-content:center;font-size:2.8rem;font-weight:900;color:#fff;font-family:"Sora",sans-serif;box-shadow:0 0 40px rgba(124,92,252,.35)}
+.inst-info h3{font-size:1.5rem;font-weight:800;margin-bottom:4px}
+.inst-title{font-size:.88rem;color:var(--accent2);font-weight:600;margin-bottom:16px}
+.inst-info p{font-size:.9rem;color:var(--text3);line-height:1.75;margin-bottom:14px}
+.inst-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.i-chip{font-size:.75rem;font-weight:600;padding:5px 12px;border-radius:50px;background:var(--bg3);border:1px solid var(--border)}
+.inst-link{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--accent2);border:1px solid rgba(124,92,252,.35);border-radius:50px;padding:8px 18px;transition:all .25s}
+.inst-link:hover{background:rgba(124,92,252,.1)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;transition:all .25s}
+.contact-card:hover{border-color:var(--border2)}
+.c-icon{font-size:2rem;margin-bottom:14px}
+.contact-card h4{font-size:1rem;font-weight:700;margin-bottom:6px}
+.contact-card p{font-size:.85rem;color:var(--text3);margin-bottom:14px;line-height:1.6}
+.contact-card a{display:inline-flex;align-items:center;gap:8px;font-size:.88rem;font-weight:600;color:var(--accent2);border:1px solid rgba(124,92,252,.3);border-radius:50px;padding:8px 18px;transition:all .25s}
+.contact-card a:hover{background:rgba(124,92,252,.1)}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 20px;text-align:center}
+.footer-inner{max-width:700px;margin:0 auto}
+.footer-logo{font-family:"Sora",sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.footer-tl{font-size:.88rem;color:var(--text3);margin-bottom:20px;line-height:1.65}
+.footer-note{font-size:.78rem;color:var(--text3);line-height:1.7;border-top:1px solid var(--border);padding-top:18px;margin-top:18px}
+.footer-note em{color:var(--accent2);font-style:normal}
+.modal-overlay{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:40px 36px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .3s;position:relative}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-close{position:absolute;top:18px;right:18px;background:var(--surface);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;cursor:pointer;color:var(--text3);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:var(--surface2);color:var(--text)}
+.modal h2{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.modal-sub{font-size:.88rem;color:var(--text3);margin-bottom:28px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:.82rem;font-weight:600;margin-bottom:7px;color:var(--text2)}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:12px 16px;color:var(--text);font-size:.9rem;font-family:"Inter",sans-serif;transition:border-color .2s;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,252,.15)}
+.form-group select option{background:var(--surface)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-submit{width:100%;padding:14px;border-radius:50px;font-weight:700;font-size:.95rem;background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;cursor:pointer;border:none;font-family:"Inter",sans-serif;box-shadow:0 4px 20px rgba(124,92,252,.35);transition:all .25s;margin-top:8px}
+.form-submit:hover{transform:translateY(-1px)}
+.form-note{font-size:.78rem;color:var(--text3);text-align:center;margin-top:12px;line-height:1.6}
+.form-success{text-align:center;padding:40px 20px;display:none}
+.success-icon{font-size:3rem;margin-bottom:14px}
+.form-success h3{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.form-success p{font-size:.9rem;color:var(--text3);line-height:1.7}
+
+/* Responsive Overrides */
+@media (max-width: 768px){
+  .nav-cta{display:none}
+  .hero{padding:88px 16px 80px}
+  .scroll-hint{display:none}
+  .hero-stats{gap:14px}
+  .hero-stat .num{font-size:1.5rem}
+  .hero-stat .lbl{font-size:.7rem}
+  section{padding:52px 16px}
+  .audience-grid,.learn-grid,.contact-grid{grid-template-columns:1fr}
+  .sessions-row{grid-template-columns:1fr}
+  .fee-top{flex-direction:column}
+  .fee-perks{grid-template-columns:1fr}
+  .inst-card{flex-direction:column;gap:20px;padding:28px 20px}
+  .modal{padding:28px 20px}
+  .form-row{grid-template-columns:1fr}
+  .timeline-grid{grid-template-columns:1fr}
+  .tl-card.showcase-full{grid-column:1}
+  .hero-badge{font-size:.68rem;padding:5px 12px;text-align:center;line-height:1.4}
+  .hero h1{font-size:1.85rem}
+  .hero-tagline{font-size:.93rem}
+  .hero-desc{font-size:.87rem}
+  .projects-grid{grid-template-columns:1fr 1fr}
+  .audience-card{padding:22px 16px}
+  .fee-main{padding:24px 16px}
+  .inst-avatar{width:80px;height:80px;font-size:2rem}
+  .section-title{font-size:1.5rem}
+  .tools-grid{gap:8px}
+  .tool-chip{padding:7px 14px;font-size:.8rem}
+  .learn-icon{width:36px;height:36px;font-size:1.1rem}
+  .weekend-label{font-size:.7rem}
+  .hero-ctas{gap:10px}
+  .not-item{font-size:.83rem}
+  .inst-info h3{font-size:1.3rem}
+  .section-sub{font-size:.92rem}
+  
+  .idea-box { padding: 16px; margin: 24px auto; flex-direction: column; gap: 8px;}
+}
+@media (max-width: 480px){
+  .projects-grid{grid-template-columns:1fr}
+  .disc-grid{grid-template-columns:1fr}
+  .fee-steps{grid-template-columns:1fr}
+  .timeline-grid{grid-template-columns:1fr}
+  .hero h1{font-size:1.6rem}
+  .hero-tagline{font-size:.87rem}
+  .hero-stats{gap:10px;flex-wrap:wrap}
+  .hero-stat .num{font-size:1.3rem}
+  .hero-stat .lbl{font-size:.64rem}
+  .hero-ctas{flex-direction:column;align-items:center;gap:8px}
+  .btn-primary,.btn-secondary{width:100%;max-width:280px;text-align:center;padding:12px 16px;font-size:.85rem}
+  .projects-group-label h3{font-size:.92rem}
+  .section-label{font-size:.65rem;letter-spacing:.08em}
+  .fee-perks{grid-template-columns:1fr}
+  .modal{padding:20px 14px}
+  .early-price{font-size:1.7rem}
+  .fee-amt{font-size:2.4rem}
+  .inst-avatar{width:68px;height:68px;font-size:1.8rem}
+  .i-chip{font-size:.7rem;padding:4px 10px}
+}
+</style>
+</head>
+<body class="lang-en">
+<nav>
+<div class="nav-logo"><span>&#9889;</span><span class="en">Spark Lab</span><span class="hi">स्पार्क लैब</span></div>
+<div class="nav-right">
+<div class="lang-toggle"><button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button><button class="lang-btn" id="btn-hi" onclick="setLang('hi')">हिंदी</button></div>
+<button class="nav-cta" onclick="openModal()"><span class="en">Register Now</span><span class="hi">सीट बुक करें</span></button>
+</div></nav>
+<div class="hero"><div class="hero-bg"></div>
+<div class="floating-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+<div class="hero-content">
+<div class="hero-badge"><div class="dot"></div><span class="en">&#128994; Registrations Open: April 1 to 25, 2026</span><span class="hi">&#128994; रजिस्ट्रेशन खुले हैं: 1 से 25 अप्रैल 2026</span></div>
+<h1 class="en">Build Something Real.<br>Keep It Forever.</h1>
+<h1 class="hi">कुछ असली बनाएं।<br>हमेशा के लिए अपनाएं।</h1>
+<p class="hero-tagline en">Four weekends. <em>One real thing.</em> Built by you. &#128640;</p>
+<p class="hero-tagline hi">चार वीकेंड। <em>एक असली प्रोजेक्ट।</em> आपके हाथों से बना। &#128640;</p>
+<p class="hero-desc en">A hands-on AI program for school students and adults, complete beginners, using the world's most powerful free AI tools to build something genuinely useful. No code. No jargon. No experience needed.</p>
+<p class="hero-desc hi">स्कूली छात्रों और वयस्कों के लिए एक प्रैक्टिकल AI प्रोग्राम। दुनिया के सबसे बेहतरीन फ्री AI टूल्स का इस्तेमाल करके कुछ ऐसा बनाएं जो सच में काम आए। कोई कोडिंग नहीं। कोई तकनीकी ज्ञान नहीं। किसी अनुभव की जरूरत नहीं।</p>
+<div class="hero-ctas">
+<button class="btn-primary" onclick="openModal()"><span class="en">&#10022; Reserve My Seat</span><span class="hi">&#10022; अपनी सीट बुक करें</span></button>
+<button class="btn-secondary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})"><span class="en">See What You'll Build &#8594;</span><span class="hi">देखें आप क्या बनाएंगे &#8594;</span></button>
+</div>
+<div class="hero-stats">
+<div class="hero-stat"><div class="num">4</div><div class="lbl en">Weekends</div><div class="lbl hi">वीकेंड</div></div>
+<div class="hero-stat"><div class="num">8</div><div class="lbl en">Sessions</div><div class="lbl hi">सेशन</div></div>
+<div class="hero-stat"><div class="num">10+</div><div class="lbl en">AI Tools</div><div class="lbl hi">AI टूल्स</div></div>
+<div class="hero-stat"><div class="num">&#8377;0</div><div class="lbl en">Extra Cost</div><div class="lbl hi">अतिरिक्त खर्च</div></div>
+</div></div>
+<div class="scroll-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 5v14M5 12l7 7 7-7"/></svg><span class="en">scroll</span><span class="hi">नीचे जाएं</span></div>
+</div><div class="full-divider"></div>
+<section id="audience"><div class="section-header">
+<div class="section-label"><span class="en">Who Is This For?</span><span class="hi">यह किसके लिए है?</span></div>
+<h2 class="section-title en">Two Kinds of Beginners.<br>One Shared Superpower.</h2>
+<h2 class="section-title hi">दो तरह के बिगिनर्स।<br>एक सुपरपावर।</h2>
+<p class="section-sub en">You don't need to know anything about AI. Just show up curious.</p>
+<p class="section-sub hi">आपको AI के बारे में कुछ भी जानने की जरूरत नहीं है। बस कुछ नया सीखने की इच्छा लेकर आएं।</p></div>
+<div class="audience-grid">
+<div class="audience-card kids"><div class="audience-icon">&#127890;</div>
+<h3 class="en">School Students</h3><h3 class="hi">स्कूली छात्र</h3>
+<p class="en">You've googled things. Maybe used ChatGPT for homework. But you've never built anything with AI that people actually use. That changes here.</p>
+<p class="hi">आपने चीज़ें गूगल की हैं। होमवर्क के लिए ChatGPT का इस्तेमाल किया होगा। लेकिन आपने कभी AI से ऐसा कुछ नहीं बनाया जो असल में लोगों के काम आए। अब यह बदलेगा।</p>
+<div class="audience-bullets">
+<div class="audience-bullet en">Class 6 onwards, any board, any school</div><div class="audience-bullet hi">कक्षा 6 से ऊपर, कोई भी बोर्ड, कोई भी स्कूल</div>
+<div class="audience-bullet en">No coding or design experience needed</div><div class="audience-bullet hi">कोडिंग या डिज़ाइन के अनुभव की कोई ज़रूरत नहीं</div>
+<div class="audience-bullet en">Build for yourself, family, or school</div><div class="audience-bullet hi">अपने लिए, परिवार के लिए या स्कूल के लिए बनाएं</div>
+<div class="audience-bullet en">Walk out with a portfolio project before your peers</div><div class="audience-bullet hi">अपने दोस्तों से पहले एक असली पोर्टफोलियो प्रोजेक्ट तैयार करें</div>
+</div></div>
+<div class="audience-card adults"><div class="audience-icon">&#127968;</div>
+<h3 class="en">Adults &amp; Home Entrepreneurs</h3><h3 class="hi">वयस्क और होम बिज़नेस</h3>
+<p class="en">You run a home business, manage a household, or want to start something. You've heard of AI but never had the guide. This is it.</p>
+<p class="hi">आप घर से बिज़नेस चलाते हैं, घर संभालते हैं, या कुछ नया शुरू करना चाहते हैं। आपने AI के बारे में सुना है लेकिन कोई सही गाइड नहीं मिली। यह कोर्स आपके लिए है।</p>
+<div class="audience-bullets">
+<div class="audience-bullet en">Homemakers, freelancers, small business owners</div><div class="audience-bullet hi">होममेकर्स, फ्रीलांसर्स और छोटे बिज़नेस के मालिक</div>
+<div class="audience-bullet en">No tech background, just a laptop &amp; willingness</div><div class="audience-bullet hi">किसी टेक्निकल बैकग्राउंड की ज़रूरत नहीं, बस एक लैपटॉप काफी है</div>
+<div class="audience-bullet en">Learn tools that save hours every week</div><div class="audience-bullet hi">ऐसे टूल्स सीखें जो हर हफ़्ते आपके घंटों का समय बचाएं</div>
+<div class="audience-bullet en">Build something that directly helps your business</div><div class="audience-bullet hi">कुछ ऐसा बनाएं जो सीधे आपके बिज़नेस या काम में मदद करे</div>
+</div></div></div></section><div class="full-divider"></div>
+<section id="projects">
+<div class="section-header" style="text-align:center">
+<div class="section-label" style="justify-content:center"><span class="en">What Will You Build?</span><span class="hi">आप क्या बनाएंगे?</span></div>
+<h2 class="section-title en">Projects That Make People Say<br><em style="color:var(--accent2);font-style:normal">"Wait, YOU made this?!"</em></h2>
+<h2 class="section-title hi">ऐसे प्रोजेक्ट्स जिन्हें देखकर लोग कहेंगे<br><em style="color:var(--accent2);font-style:normal">"क्या, ये तुमने बनाया है?!"</em></h2>
+<p class="section-sub en" style="margin:0 auto">Pick a project. Build it. Keep it. Know how to build the next one yourself.</p>
+<p class="section-sub hi" style="margin:0 auto">अपना प्रोजेक्ट चुनें। उसे बनाएं। उसे अपने पास रखें और सीखें कि अगला खुद कैसे बनाना है।</p></div>
+
+<div class="idea-box">
+  <div class="idea-box-icon">&#128161;</div>
+  <div>
+    <p class="en"><strong>Already have a project idea? Bring it.</strong> No idea yet? That is perfectly fine. Session 2 is a dedicated one-on-one where the instructor sits with each student to find the right project for them.</p>
+    <p class="hi"><strong>कोई प्रोजेक्ट आईडिया है? बहुत बढ़िया!</strong> कोई आईडिया नहीं है? कोई बात नहीं। सेशन 2 में हम आपके साथ 1-ऑन-1 बैठकर आपके लिए सबसे सही प्रोजेक्ट तय करेंगे।</p>
+  </div>
+</div>
+
+<div class="projects-group">
+<div class="projects-group-label"><div class="grp-icon">&#127890;</div><div><h3 class="en">Sample Projects For School Students</h3><h3 class="hi">स्कूली छात्रों के लिए प्रोजेक्ट् उधारण</h3></div></div>
+<div class="projects-grid">
+<div class="project-card"><span class="proj-badge badge-web en">Website</span><span class="proj-badge badge-web hi">वेबसाइट</span><span class="proj-emoji">&#128218;</span><div class="proj-title en">My Study Hub</div><div class="proj-title hi">माई स्टडी हब</div><div class="proj-desc en">AI summaries, flashcards, practice tests for your toughest subject. Your secret exam weapon.</div><div class="proj-desc hi">सबसे मुश्किल विषय के लिए AI समरी, फ़्लैशकार्ड्स और प्रैक्टिस टेस्ट। परीक्षा के लिए आपका सीक्रेट हथियार।</div></div>
+<div class="project-card"><span class="proj-badge badge-web en">Website</span><span class="proj-badge badge-web hi">वेबसाइट</span><span class="proj-emoji">&#127951;</span><div class="proj-title en">Cricket Dashboard</div><div class="proj-title hi">क्रिकेट डैशबोर्ड</div><div class="proj-desc en">Track scores, compare players, win every debate with stats. Build it for your cricket-crazy group.</div><div class="proj-desc hi">स्कोर्स ट्रैक करें, खिलाड़ियों की तुलना करें। अपने क्रिकेट वाले ग्रुप के लिए इसे बनाएं।</div></div>
+<div class="project-card"><span class="proj-badge badge-tool en">Tool</span><span class="proj-badge badge-tool hi">टूल</span><span class="proj-emoji">&#129504;</span><div class="proj-title en">Smart Quiz Maker</div><div class="proj-title hi">स्मार्ट क्विज़ मेकर</div><div class="proj-desc en">AI writes the questions. You share the link. Your class or study group loves it.</div><div class="proj-desc hi">AI खुद सवाल लिखेगा। आप बस लिंक शेयर करें। क्लास और दोस्तों के साथ खेलें।</div></div>
+
+<div class="project-card"><span class="proj-badge badge-tool en">Tool</span><span class="proj-badge badge-tool hi">टूल</span><span class="proj-emoji">&#128176;</span><div class="proj-title en">Pocket Money Tracker</div><div class="proj-title hi">पॉकेट मनी ट्रैकर</div><div class="proj-desc en">Every rupee in, every rupee out. See where it goes. Save for what you actually want.</div><div class="proj-desc hi">हर आने-जाने वाले पैसे का हिसाब। देखें पैसा कहाँ खर्च हो रहा है और अपनी पसंदीदा चीज़ के लिए बचाएं।</div></div>
+</div></div>
+<div class="projects-group">
+<div class="projects-group-label"><div class="grp-icon">&#127968;</div><div><h3 class="en">Sample Projects For Adults</h3><h3 class="hi">वयस्कों के लिए प्रोजेक्ट् उधारण</h3></div></div>
+<div class="projects-grid">
+
+<div class="project-card"><span class="proj-badge badge-creative en">Creative</span><span class="proj-badge badge-creative hi">क्रिएटिव</span><span class="proj-emoji">&#129395;</span><div class="proj-title en">Handmade Products Catalogue</div><div class="proj-title hi">हैंडमेड प्रोडक्ट्स कैटलॉग</div><div class="proj-desc en">Jewellery, sarees, pickles. AI photos and an order form that never sleeps.</div><div class="proj-desc hi">ज्वेलरी, साड़ियाँ या अचार। खूबसूरत AI फोटोज़ और एक ऑनलाइन ऑर्डर फॉर्म।</div></div>
+
+<div class="project-card"><span class="proj-badge badge-creative en">Creative</span><span class="proj-badge badge-creative hi">क्रिएटिव</span><span class="proj-emoji">&#127775;</span><div class="proj-title en">Social Media &amp; Marketing Kit</div><div class="proj-title hi">सोशल मीडिया और मार्केटिंग किट</div><div class="proj-desc en">AI-generated posts, reel scripts, product photos, and promotional content for your business. No designer needed.</div><div class="proj-desc hi">बिज़नेस के लिए AI से बनी पोस्ट, रील स्क्रिप्ट्स और प्रमोशनल कंटेंट। किसी डिज़ाइनर की ज़रूरत नहीं।</div></div>
+<div class="project-card"><span class="proj-badge badge-web en">Website</span><span class="proj-badge badge-web hi">वेबसाइट</span><span class="proj-emoji">&#128141;</span><div class="proj-title en">Shaadi Invitation Website</div><div class="proj-title hi">शादी इनविटेशन वेबसाइट</div><div class="proj-desc en">Digital invite with RSVP, venue map &amp; couple story. Family will be floored.</div><div class="proj-desc hi">RSVP, वेन्यू मैप और कपल स्टोरी के साथ एक शानदार डिजिटल इनविटेशन। रिश्तेदार देखते रह जाएंगे।</div></div>
+<div class="project-card"><span class="proj-badge badge-tool en">Tool</span><span class="proj-badge badge-tool hi">टूल</span><span class="proj-emoji">&#127960;</span><div class="proj-title en">Society / School Notice Hub</div><div class="proj-title hi">सोसाइटी / स्कूल नोटिस हब</div><div class="proj-desc en">Events, dates, announcements, one shareable link. No more forgotten WhatsApp forwards.</div><div class="proj-desc hi">सभी इवेंट्स, तारीखें और घोषणाएं एक लिंक में। अब कोई WhatsApp मैसेज मिस नहीं होगा।</div></div>
+</div></div></section><div class="full-divider"></div>
+
+<section id="learn"><div class="section-header">
+<div class="section-label"><span class="en">Skills You'll Walk Away With</span><span class="hi">वो स्किल्स जो आप यहाँ से लेकर जाएंगे</span></div>
+<h2 class="section-title en">Skills for Life.<br>Not Just the Weekend.</h2>
+<h2 class="section-title hi">ज़िंदगी भर काम आने वाली स्किल्स।<br>सिर्फ वीकेंड के लिए नहीं।</h2>
+<p class="section-sub en">The tools change every year. The thinking doesn't. We teach you both.</p>
+<p class="section-sub hi">टूल्स हर साल बदलते हैं, लेकिन सोचने का तरीका नहीं। हम आपको दोनों सिखाएंगे।</p></div>
+<div class="learn-grid">
+<div class="learn-item"><div class="learn-icon li-pu">&#128172;</div><div class="learn-text"><h4 class="en">The Art of Talking to AI</h4><h4 class="hi">AI से बात करने की कला</h4><p class="en">Prompt engineering: how to ask so AI gives exactly what you need.</p><p class="hi">प्रॉम्प्ट इंजीनियरिंग: AI से सही सवाल कैसे पूछें ताकि आपको बिल्कुल सही जवाब मिले।</p></div></div>
+<div class="learn-item"><div class="learn-icon li-bl">&#128444;&#65039;</div><div class="learn-text"><h4 class="en">Create Visuals from Thin Air</h4><h4 class="hi">हवा से तस्वीरें बनाएं</h4><p class="en">Stunning images without Photoshop or a designer. Type, click, done.</p><p class="hi">बिना फ़ोटोशॉप या डिज़ाइनर के शानदार तस्वीरें। बस टाइप करें और तस्वीर हाज़िर।</p></div></div>
+<div class="learn-item"><div class="learn-icon li-pk">&#127909;</div><div class="learn-text"><h4 class="en">Make Videos Like a Pro</h4><h4 class="hi">प्रो की तरह वीडियो बनाएं</h4><p class="en">Reels, clips, animations, things that would have cost lakhs just two years ago.</p><p class="hi">रील्स, क्लिप्स और एनिमेशन, जिन्हें बनाने में दो साल पहले लाखों रुपये लगते थे।</p></div></div>
+<div class="learn-item"><div class="learn-icon li-gr">&#127760;</div><div class="learn-text"><h4 class="en">Launch a Website Without Code</h4><h4 class="hi">बिना कोड के वेबसाइट बनाएं</h4><p class="en">Real URL. Real users. Built with AI. Not a single line hand-written.</p><p class="hi">असली URL और असली यूज़र्स। पूरी वेबसाइट AI से बनी, बिना एक भी लाइन कोड लिखे।</p></div></div>
+<div class="learn-item"><div class="learn-icon li-go">&#128270;</div><div class="learn-text"><h4 class="en">Research Like a Scientist</h4><h4 class="hi">साइंटिस्ट की तरह रिसर्च करें</h4><p class="en">Use Perplexity and NotebookLM to work faster than anyone around you.</p><p class="hi">Perplexity और NotebookLM का इस्तेमाल करके किसी से भी तेज़ काम करें।</p></div></div>
+<div class="learn-item"><div class="learn-icon li-pu">&#129513;</div><div class="learn-text"><h4 class="en">Put It All Together</h4><h4 class="hi">सब कुछ एक साथ जोड़ें</h4><p class="en">Combine text, images, video, and website into one thing that works and you're proud of.</p><p class="hi">टेक्स्ट, इमेज, वीडियो और वेबसाइट को मिलाकर एक ऐसा प्रोजेक्ट बनाएं जिस पर आपको गर्व हो।</p></div></div>
+</div>
+<div class="not-list">
+<h3 class="en">What This Is NOT &#128683;</h3><h3 class="hi">यह प्रोग्राम क्या नहीं है &#128683;</h3>
+<div class="not-item"><span class="en">A coding bootcamp. Not a single line of code from scratch</span><span class="hi">यह कोडिंग क्लास नहीं है। हम एक भी लाइन का कोड नहीं लिखेंगे।</span></div>
+<div class="not-item"><span class="en">A theory class. Every session ends with something you can show</span><span class="hi">यह थ्योरी क्लास नहीं है। हर सेशन के अंत में आपके पास दिखाने के लिए कुछ असली होगा।</span></div>
+<div class="not-item"><span class="en">A one-size-fits-all program. Your project and pace are yours</span><span class="hi">यह रटा-रटाया कोर्स नहीं है। आपका प्रोजेक्ट और सीखने की रफ़्तार आपकी अपनी होगी।</span></div>
+<div class="not-item"><span class="en">A certificate that lives in a drawer. What you build, you keep</span><span class="hi">यह दराज़ में रखे जाने वाले सर्टिफ़िकेट के लिए नहीं है। आप जो बनाएंगे, वो हमेशा आपका रहेगा।</span></div>
+</div></section><div class="full-divider"></div>
+
+<section id="sessions"><div class="section-header">
+<div class="section-label"><span class="en">The 8 Sessions</span><span class="hi">8 सेशंस का प्लान</span></div>
+<h2 class="section-title en">Every Session Moves You Forward.<br>No Filler. No Fluff.</h2>
+<h2 class="section-title hi">हर सेशन आपको एक कदम आगे ले जाएगा。<br>कोई बकवास नहीं, सिर्फ काम की बात।</h2>
+<p class="section-sub en">Come with curiosity, leave with something built.</p>
+<p class="section-sub hi">कुछ नया सीखने की इच्छा लेकर आएं, कुछ बनाकर लौटें।</p></div>
+<div>
+<div class="weekend-block"><div class="weekend-label"><span class="en">Weekend 1: May 9 &amp; 10</span><span class="hi">पहला वीकेंड: 9 और 10 मई</span><div class="wk-line"></div></div>
+<div class="sessions-row">
+<div class="session-card"><div class="session-num en">Session 01 &middot; Saturday</div><div class="session-num hi">सेशन 01 &middot; शनिवार</div><h4 class="en">AI Unlocked: Your First Real Taste</h4><h4 class="hi">AI की दुनिया: आपका पहला कदम</h4><p class="en">Big picture, basics, and AI put to work immediately. You won't believe what you'll do by the end.</p><p class="hi">बेसिक्स समझें और AI का तुरंत इस्तेमाल शुरू करें। सेशन के अंत तक आप हैरान रह जाएंगे।</p></div>
+<div class="session-card"><div class="session-num en">Session 02 &middot; Sunday</div><div class="session-num hi">सेशन 02 &middot; रविवार</div><h4 class="en">Your Project, Your Vision</h4><h4 class="hi">आपका प्रोजेक्ट, आपका विज़न</h4><p class="en">One-on-one with every student. Finalise your idea and leave with a clear direction.</p><p class="hi">हर एक के साथ 1-ऑन-1 बातचीत। अपना आईडिया फाइनल करें और सही दिशा के साथ आगे बढ़ें।</p></div>
+</div></div>
+<div class="weekend-block"><div class="weekend-label"><span class="en">Weekend 2: May 16 &amp; 17</span><span class="hi">दूसरा वीकेंड: 16 और 17 मई</span><div class="wk-line"></div></div>
+<div class="sessions-row">
+<div class="session-card"><div class="session-num en">Session 03 &middot; Saturday</div><div class="session-num hi">सेशन 03 &middot; शनिवार</div><h4 class="en">See It: AI Image Generation</h4><h4 class="hi">तस्वीरें बनाएं: AI इमेज जनरेशन</h4><p class="en">Describe it, watch it appear. Project visuals in minutes.</p><p class="hi">बस लिख कर बताएं और तस्वीर हाज़िर। मिनटों में प्रोजेक्ट के लिए शानदार विज़ुअल्स।</p></div>
+<div class="session-card"><div class="session-num en">Session 04 &middot; Sunday</div><div class="session-num hi">सेशन 04 &middot; रविवार</div><h4 class="en">Move It: AI Video Generation</h4><h4 class="hi">वीडियो बनाएं: AI वीडियो जनरेशन</h4><p class="en">Reels, clips, animations with Veo &amp; Nanobanana, things that stop thumbs mid-scroll.</p><p class="hi">Veo और Nanobanana के साथ रील्स, क्लिप्स और एनिमेशन जो लोगों को देखने पर मजबूर कर दें।</p></div>
+</div></div>
+<div class="weekend-block"><div class="weekend-label"><span class="en">Weekend 3: May 23 &amp; 24</span><span class="hi">तीसरा वीकेंड: 23 और 24 मई</span><div class="wk-line"></div></div>
+<div class="sessions-row">
+<div class="session-card"><div class="session-num en">Session 05 &middot; Saturday</div><div class="session-num hi">सेशन 05 &middot; शनिवार</div><h4 class="en">Design It: Canva &amp; Adobe Express</h4><h4 class="hi">डिज़ाइन करें: Canva और Adobe Express</h4><p class="en">Combine everything into something professionally made. Your project takes final shape.</p><p class="hi">सब कुछ एक साथ जोड़कर प्रोफेशनल लुक दें। आपका प्रोजेक्ट अपना असली रूप लेगा।</p></div>
+<div class="session-card"><div class="session-num en">Session 06 &middot; Sunday</div><div class="session-num hi">सेशन 06 &middot; रविवार</div><h4 class="en">Launch It: Your Website Goes Live</h4><h4 class="hi">लॉन्च करें: आपकी वेबसाइट लाइव</h4><p class="en">Idea to live URL in one session. Built with AI. Your first real thing on the internet.</p><p class="hi">आईडिया से लाइव URL तक एक ही सेशन में। इंटरनेट पर आपकी बनाई हुई पहली असली चीज़।</p></div>
+</div></div>
+<div class="weekend-block"><div class="weekend-label"><span class="en">Weekend 4: May 30 &amp; 31</span><span class="hi">चौथा वीकेंड: 30 और 31 मई</span><div class="wk-line"></div></div>
+<div class="sessions-row">
+<div class="session-card optional"><div class="session-num en">Session 07 &middot; Saturday</div><div class="session-num hi">सेशन 07 &middot; शनिवार</div><h4 class="en">Polish &amp; Peer Review</h4><h4 class="hi">पॉलिश और रिव्यू</h4><p class="en">Peer feedback, last improvements. Walk into Showcase Day with full confidence.</p><p class="hi">बाकियों से फीडबैक लें और आखिरी सुधार करें। शोकेस डे के लिए पूरी तरह तैयार हों।</p></div>
+<div class="session-card special"><div class="session-num en">Session 08 &middot; Sunday &#127881;</div><div class="session-num hi">सेशन 08 &middot; रविवार &#127881;</div><h4 class="en">Showcase Day: Show the World</h4><h4 class="hi">शोकेस डे: दुनिया को दिखाएं</h4><p class="en">Every student presents. Family invited. This is your moment.</p><p class="hi">हर कोई अपना प्रोजेक्ट पेश करेगा। परिवार भी शामिल हो सकता है। यह आपका दिन है!</p></div>
+</div></div>
+</div></section><div class="full-divider"></div>
+
+<section id="tools"><div class="section-header">
+<div class="section-label"><span class="en">The Toolkit</span><span class="hi">टूलकिट</span></div>
+<h2 class="section-title en">The World's Best AI Tools.<br>All Free. All Yours.</h2>
+<h2 class="section-title hi">दुनिया के सबसे बेहतरीन AI टूल्स।<br>सब फ्री। सब आपके लिए।</h2>
+<p class="section-sub en">Free tiers only. No subscriptions. All you need: a laptop and the ability to type.</p>
+<p class="section-sub hi">हम सिर्फ फ्री टूल्स का इस्तेमाल करेंगे। कोई सब्सक्रिप्शन नहीं चाहिए। बस एक लैपटॉप और टाइप करने की स्किल चाहिए।</p></div>
+<div class="tools-grid">
+<div class="tool-chip"><div class="tool-dot" style="background:#d97706"></div>Claude<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#4285f4"></div>Gemini<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#10a37f"></div>ChatGPT<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#6366f1"></div>Perplexity<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#f59e0b"></div>NotebookLM<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#ec4899"></div>Nanobanana<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#06b6d4"></div>Veo<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#3b82f6"></div>Meta AI<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#1d9bf0"></div>Grok<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#00c4cc"></div>Canva<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#ff0000"></div>Adobe Express<span class="tool-free">Free</span></div>
+<div class="tool-chip"><div class="tool-dot" style="background:#f97316"></div>HTML &amp; AI Builders<span class="tool-free">Free</span></div>
+</div>
+<div class="tools-note"><span style="font-size:1.3rem;flex-shrink:0">&#10003;</span><div><strong class="en">Zero cost beyond the course fee. No subscriptions. No premium tools.</strong><strong class="hi">कोर्स फीस के बाद कोई खर्च नहीं। कोई सब्सक्रिप्शन नहीं, कोई प्रीमियम टूल्स नहीं।</strong></div></div>
+</section><div class="full-divider"></div>
+
+<section id="timeline"><div class="section-header">
+<div class="section-label"><span class="en">Key Dates</span><span class="hi">ज़रूरी तारीखें</span></div>
+<h2 class="section-title en">Move Fast.<br>Seats Are Limited.</h2>
+<h2 class="section-title hi">जल्दी करें।<br>सीटें लिमिटेड हैं।</h2>
+<p class="section-sub en">Every step is simple. Don't overthink, just start.</p>
+<p class="section-sub hi">हर कदम आसान है। ज़्यादा न सोचें, बस शुरुआत करें।</p></div>
+<div class="timeline-grid">
+<div class="tl-card open-now"><div class="tl-badge live en">&#128994; Open Now</div><div class="tl-badge live hi">&#128994; अब खुला है</div><div class="tl-date en">April 1 &#8211; 15</div><div class="tl-date hi">1 &#8211; 15 अप्रैल</div><h4 class="en">&#9889; Early Bird Window</h4><h4 class="hi">&#9889; अर्ली बर्ड डिस्काउंट</h4><p class="en">Register now and save &#8377;500. Best price ever.</p><p class="hi">अभी रजिस्टर करें और ₹500 बचाएं।</p></div>
+<div class="tl-card"><div class="tl-badge hurry en">&#9203; Coming Up</div><div class="tl-badge hurry hi">&#9203; आने वाला है</div><div class="tl-date en">April 16 &#8211; 25</div><div class="tl-date hi">16 &#8211; 25 अप्रैल</div><h4 class="en">Regular Registration</h4><h4 class="hi">रेगुलर रजिस्ट्रेशन</h4><p class="en">Last chance. After April 25, registrations close.</p><p class="hi">आखिरी मौका। 25 अप्रैल के बाद रजिस्ट्रेशन बंद हो जाएंगे।</p></div>
+<div class="tl-card"><div class="tl-date en">April 26 &#8211; 30</div><div class="tl-date hi">26 &#8211; 30 अप्रैल</div><h4 class="en">Final Fee &amp; Confirmation</h4><h4 class="hi">आखिरी पेमेंट और कन्फर्मेशन</h4><p class="en">Pay balance (after discounts), receive session link.</p><p class="hi">बची हुई फीस दें और सेशन का लिंक पाएं।</p></div>
+<div class="tl-card hi-light"><div class="tl-date en">May 9, 2026</div><div class="tl-date hi">9 मई 2026</div><h4 class="en">&#128640; First Session Begins</h4><h4 class="hi">&#128640; पहला सेशन शुरू</h4><p class="en">Day one of four incredible weekends. Come with nothing, leave with everything.</p><p class="hi">चार शानदार वीकेंड का पहला दिन। खाली हाथ आएं, बहुत कुछ लेकर जाएं।</p></div>
+<div class="tl-card hi-light showcase-full"><div class="tl-date en">May 31, 2026</div><div class="tl-date hi">31 मई 2026</div><h4 class="en">&#127881; Showcase Day</h4><h4 class="hi">&#127881; शोकेस डे</h4><p class="en">Present what you built. Bring family. You've earned this.</p><p class="hi">अपना बनाया हुआ प्रोजेक्ट दिखाएं। परिवार को लाएं। यह पल आपका है।</p></div>
+</div></section><div class="full-divider"></div>
+
+<div class="fee-wrap"><section id="fee"><div class="section-header">
+<div class="section-label"><span class="en">Fee &amp; Registration</span><span class="hi">फीस और रजिस्ट्रेशन</span></div>
+<h2 class="section-title en">Clear Fees.<br>Zero Fine Print.</h2>
+<h2 class="section-title hi">साफ फीस।<br>कोई छिपे हुए चार्जेज नहीं।</h2>
+<p class="section-sub en">One course. One fee. Zero hidden costs.</p>
+<p class="section-sub hi">एक कोर्स। एक फीस। सब कुछ साफ।</p></div>
+<div class="fee-main">
+<div class="fee-top">
+<div><div class="fee-lbl en">Standard Course Fee</div><div class="fee-lbl hi">स्टैंडर्ड कोर्स फीस</div><div class="fee-amt"><sub>&#8377;</sub>3,999</div><div class="fee-per en">per student &middot; 8 sessions &middot; 1 real project</div><div class="fee-per hi">प्रति छात्र &middot; 8 सेशन &middot; 1 असली प्रोजेक्ट</div></div>
+<div class="fee-early"><div class="early-tag en">&#9889; Early Bird: Register by Apr 15</div><div class="early-tag hi">&#9889; 15 अप्रैल तक रजिस्टर करें</div><div class="early-price">&#8377;3,499</div><div class="early-save en">Save &#8377;500, First 15 days only</div><div class="early-save hi">₹500 बचाएं (शुरुआती 15 दिन)</div></div>
+</div>
+<div class="fee-perks">
+<div class="fee-perk"><span class="ck">&#10003;</span><span class="en">All 8 sessions included</span><span class="hi">सभी 8 सेशन शामिल</span></div>
+<div class="fee-perk"><span class="ck">&#10003;</span><span class="en">1-on-1 project mentoring</span><span class="hi">1-ऑन-1 प्रोजेक्ट मेंटरशिप</span></div>
+<div class="fee-perk"><span class="ck">&#10003;</span><span class="en">All AI tools (free tiers)</span><span class="hi">सभी AI टूल्स (फ्री टियर)</span></div>
+<div class="fee-perk"><span class="ck">&#10003;</span><span class="en">Hindi &amp; English both</span><span class="hi">हिंदी और इंग्लिश दोनों भाषाएं</span></div>
+<div class="fee-perk"><span class="ck">&#10003;</span><span class="en">Showcase Day with family</span><span class="hi">परिवार के साथ शोकेस डे</span></div>
+<div class="fee-perk"><span class="ck">&#10003;</span><span class="en">Zero hidden costs</span><span class="hi">कोई छिपे हुए खर्च नहीं</span></div>
+</div></div>
+<h3 style="font-size:1.05rem;font-weight:700;margin:32px 0 16px" class="en">How to Register, 3 Steps</h3>
+<h3 style="font-size:1.05rem;font-weight:700;margin:32px 0 16px" class="hi">रजिस्टर कैसे करें, 3 आसान कदम</h3>
+<div class="fee-steps">
+<div class="fee-step"><div class="fee-step-n">1</div><div><h5 class="en">Pay &#8377;999 to Lock Your Seat</h5><h5 class="hi">&#8377;999 देकर अपनी सीट पक्की करें</h5><p class="en">Fill the form and pay &#8377;999 (non-refundable). Seat confirmed.</p><p class="hi">फॉर्म भरें और ₹999 (नॉन-रिफंडेबल) दें। सीट कन्फर्म।</p></div></div>
+<div class="fee-step"><div class="fee-step-n">2</div><div><h5 class="en">Discounts Applied (by Apr 25)</h5><h5 class="hi">डिस्काउंट लागू होंगे (25 अप्रैल तक)</h5><p class="en">Early bird &amp; referral discounts calculated. Final amount shared.</p><p class="hi">अर्ली बर्ड और रेफरल डिस्काउंट जुड़ेंगे और फाइनल राशि बताई जाएगी।</p></div></div>
+<div class="fee-step"><div class="fee-step-n">3</div><div><h5 class="en">Pay Balance &amp; Get Session Link</h5><h5 class="hi">बची हुई फीस दें और लिंक पाएं</h5><p class="en">Pay by April 30. Receive session link. Show up May 9.</p><p class="hi">30 अप्रैल तक बची हुई फीस दें। लिंक पाएं और 9 मई को क्लास में आएं।</p></div></div>
+</div>
+<h3 style="font-size:1.05rem;font-weight:700;margin-bottom:16px" class="en">Ways to Save More</h3>
+<h3 style="font-size:1.05rem;font-weight:700;margin-bottom:16px" class="hi">और पैसे बचाने के तरीके</h3>
+<div class="disc-grid">
+<div class="disc-card"><div class="disc-icon">&#9889;</div><div class="disc-amt">&#8377;500 off</div><h4 class="en">Early Bird</h4><h4 class="hi">अर्ली बर्ड</h4><p class="en">Register by April 15. Automatic &#8377;500 off.</p><p class="hi">15 अप्रैल तक रजिस्टर करने पर सीधे ₹500 की छूट।</p></div>
+<div class="disc-card"><div class="disc-icon">&#129309;</div><div class="disc-amt">&#8377;500 off</div><h4 class="en">Refer a Friend</h4><h4 class="hi">दोस्तों को लाएं</h4><p class="en">Every friend you bring = &#8377;500 off. Bring two, save &#8377;1,000.</p><p class="hi">हर दोस्त पर ₹500 की छूट। दो दोस्त लाएं, ₹1000 बचाएं।</p></div>
+</div>
+<div class="fee-zero"><span style="font-size:1.3rem;flex-shrink:0">&#127919;</span><div><strong class="en">After the course fee, there is nothing else to pay. No subscriptions, no materials, no hidden charges. Just show up.</strong><strong class="hi">कोर्स फीस के अलावा आपको कुछ नहीं देना है। कोई सब्सक्रिप्शन नहीं, कोई अलग से सामान नहीं। बस क्लास में आना है।</strong></div></div>
+</section></div><div class="full-divider"></div>
+
+<section id="instructor"><div class="section-header">
+<div class="section-label"><span class="en">Your Instructor</span><span class="hi">आपके इंस्ट्रक्टर</span></div>
+<h2 class="section-title en">Taught by Someone Who<br>Actually Uses AI Every Day.</h2>
+<h2 class="section-title hi">उनसे सीखें जो खुद हर दिन<br>AI का इस्तेमाल करते हैं।</h2></div>
+<div class="inst-card">
+<img src="https://media.licdn.com/dms/image/v2/D4D03AQH2FCb-ZPCDhA/profile-displayphoto-scale_400_400/B4DZ1JnwgAIoAg-/0/1775056661330?e=1776902400&v=beta&t=9Yty968RiW8U7rcFeAzWE58iX3y7WuJ5zU4Mp0YnDEU" class="inst-avatar" style="object-fit: cover;">
+<div class="inst-info">
+<h3>Himanshu Agarwal</h3>
+<div class="inst-title en">BITS Pilani (M.Sc. (Hons.) Mathematics &amp; B.E. (Hons.) EEE) &middot; Business Strategy, PayU India &middot; Educator 10+ Yrs</div>
+<div class="inst-title hi">BITS Pilani &middot; बिज़नेस स्ट्रेटेजी, PayU India &middot; AI प्रैक्टिशनर &middot; 10+ साल का पढ़ाने का अनुभव</div>
+<p class="en">I work in Business Strategy at PayU India, and for the last three years, AI has been woven into almost everything I do. I&#8217;ve used it to model market opportunities, draft board-level strategy documents, build internal tools that replaced entire manual workflows, and generate analyses that used to take a team of analysts days to produce. I know what AI can do at a serious professional level, not just what it demos well.</p>
+<p class="hi">मैं PayU India में बिज़नेस स्ट्रेटेजी में काम करता हूँ और पिछले तीन सालों से AI मेरे काम का अहम हिस्सा बन चुका है। मैंने बाज़ार के मौकों को समझने, बोर्ड-लेवल के स्ट्रेटेजी डाक्यूमेंट्स बनाने और ऐसे इंटरनल टूल्स बनाने के लिए इसका इस्तेमाल किया है जिन्होंने मैन्युअल काम को पूरी तरह खत्म कर दिया। मैं जानता हूँ कि AI प्रोफेशनल लेवल पर असल में क्या कर सकता है, सिर्फ डेमो दिखाने तक सीमित नहीं है।</p>
+<p class="en">Outside of work, I&#8217;ve used these same tools to help grow my family&#8217;s business: building their digital presence from scratch, creating marketing content, designing product catalogues, and automating customer communication. What I bring to Spark Lab is not a curriculum I downloaded. It&#8217;s a set of skills I use every single week.</p>
+<p class="hi">ऑफ़िस के बाहर, मैंने इन्ही टूल्स का इस्तेमाल करके अपने फैमिली बिज़नेस को भी बढ़ाया है: डिजिटल प्रेजेंस बनाने से लेकर मार्केटिंग कंटेंट, प्रोडक्ट कैटलॉग और कस्टमर्स के साथ कम्युनिकेशन को ऑटोमेट करने तक। स्पार्क लैब में मैं आपको इंटरनेट से डाउनलोड किया हुआ कोई सिलेबस नहीं बल्कि वो प्रैक्टिकल स्किल्स सिखाऊंगा जो मैं खुद हर हफ़्ते इस्तेमाल करता हूँ।</p>
+<p class="en">I&#8217;m also a teacher. Over 10 years of tutoring students across India, Singapore, the UK, the US, and Australia, across every age group and learning level. I understand how people actually learn new things, not just how they&#8217;re supposed to. Spark Lab is where both sides of that experience meet.</p>
+<p class="hi">इसके साथ ही मैं एक टीचर भी हूँ। भारत, सिंगापुर, यूके, अमेरिका और ऑस्ट्रेलिया के स्टूडेंट्स को पढ़ाने का मेरा 10+ सालों का अनुभव है। मैं समझता हूँ कि लोग असल में नई चीज़ें कैसे सीखते हैं। स्पार्क लैब में आपको मेरे प्रैक्टिकल काम और सिखाने के अनुभव, दोनों का पूरा फायदा मिलेगा।</p>
+<div class="inst-chips">
+<span class="i-chip en">3+ Yrs Daily AI</span><span class="i-chip hi">3+ साल रोज़ाना AI का इस्तेमाल</span>
+<span class="i-chip en">BITS Pilani</span><span class="i-chip hi">BITS पिलानी</span>
+<span class="i-chip en">10+ Yrs Teaching</span><span class="i-chip hi">10+ साल टीचिंग</span>
+<span class="i-chip en">5+ Countries</span><span class="i-chip hi">5+ देशों के स्टूडेंट्स</span>
+<span class="i-chip">PayU India</span>
+</div>
+<a href="https://linkedin.com/in/him9495" target="_blank" rel="noopener" class="inst-link">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+linkedin.com/in/him9495</a>
+</div></div></section><div class="full-divider"></div>
+
+<section id="contact"><div class="section-header">
+<div class="section-label"><span class="en">Get in Touch</span><span class="hi">हमसे संपर्क करें</span></div>
+<h2 class="section-title en">Questions? Just Ask.</h2>
+<h2 class="section-title hi">कोई सवाल? बेझिझक पूछें।</h2>
+<p class="section-sub en">No bots. Real answers from the instructor directly.</p>
+<p class="section-sub hi">कोई बॉट्स नहीं। सीधे हमारे इंस्ट्रक्टर से असली जवाब।</p></div>
+<div class="contact-grid">
+<div class="contact-card"><div class="c-icon">&#128172;</div><h4 class="en">WhatsApp: Fastest Response</h4><h4 class="hi">WhatsApp: सबसे तेज़ जवाब</h4><p class="en">Message your question and get a reply within hours. Hindi or English, both fine.</p><p class="hi">अपना सवाल मैसेज करें और कुछ ही घंटों में जवाब पाएं। हिंदी या इंग्लिश, दोनों चलेगा।</p><a href="https://wa.me/917737767776" target="_blank" rel="noopener">WhatsApp Us</a></div>
+<div class="contact-card"><div class="c-icon">&#128222;</div><h4 class="en">Call Directly</h4><h4 class="hi">सीधे कॉल करें</h4><p class="en">Prefer a conversation? Call to discuss and register over the phone.</p><p class="hi">बात करना चाहते हैं? कोर्स पर चर्चा करने और रजिस्टर करने के लिए कॉल करें।</p><a href="tel:+917737767776">Call Us</a></div>
+</div></section><div class="full-divider"></div>
+
+<section style="text-align:center;padding:80px 20px;max-width:720px;margin:0 auto">
+<div class="section-label" style="justify-content:center;margin-bottom:20px"><span class="en">Registrations Open, April 1 to 25</span><span class="hi">रजिस्ट्रेशन खुले हैं: 1 से 25 अप्रैल</span></div>
+<h2 style="font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em" class="en">The Best Time to Start Was Yesterday.<br>The Next Best? <span style="background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Right Now.</span></h2>
+<h2 style="font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;margin-bottom:16px;letter-spacing:-.02em" class="hi">शुरू करने का सबसे अच्छा समय कल था।<br>अगला सबसे अच्छा समय? <span style="background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">अभी।</span></h2>
+<p style="color:var(--text3);margin-bottom:36px;font-size:1rem;line-height:1.75" class="en">Seats genuinely limited. Two batches, grouped by age. Once they fill, they fill. Don't be the one who says "I was going to do that."</p>
+<p style="color:var(--text3);margin-bottom:36px;font-size:1rem;line-height:1.75" class="hi">सीटें बहुत लिमिटेड हैं। उम्र के हिसाब से दो अलग बैच। सीटें भरते ही एडमिशन बंद। ऐसा न हो कि आप बस सोचते ही रह जाएं।</p>
+<button class="btn-primary" style="font-size:1.05rem;padding:16px 40px" onclick="openModal()"><span class="en">&#10022; Register Now: ₹999 to Start</span><span class="hi">&#10022; अभी रजिस्टर करें: मात्र ₹999 से शुरुआत</span></button>
+<p style="margin-top:16px;font-size:.8rem;color:var(--text3)" class="en">Early bird discount available until April 15.</p>
+<p style="margin-top:16px;font-size:.8rem;color:var(--text3)" class="hi">15 अप्रैल तक अर्ली बर्ड डिस्काउंट उपलब्ध है।</p>
+</section>
+
+<footer><div class="footer-inner">
+<div class="footer-logo">&#9889; Spark Lab</div>
+<p class="footer-tl en">Four weekends. One real thing. Built by you.<br>May 2026 &middot; Hindi &amp; English &middot; Online &middot; AI-Powered</p>
+<p class="footer-tl hi">चार वीकेंड। एक असली प्रोजेक्ट। आपके हाथों से बना।<br>मई 2026 &middot; हिंदी और इंग्लिश &middot; ऑनलाइन &middot; AI-पावर्ड</p>
+<div class="footer-note"><span class="en">This website was built entirely using AI. Not a single line of code was written by hand. <em>This is exactly what this course will teach you to do.</em></span><span class="hi">यह पूरी वेबसाइट AI का इस्तेमाल करके बनाई गई है। कोड की एक भी लाइन हाथ से नहीं लिखी गई। <em>यही तो हम आपको इस कोर्स में सिखाने वाले हैं।</em></span></div>
+</div></footer>
+
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+<div class="modal">
+<button class="modal-close" onclick="closeModal()">&#10005;</button>
+<div id="form-body">
+<h2 class="en">Reserve Your Seat</h2><h2 class="hi">अपनी सीट बुक करें</h2>
+<p class="modal-sub en">Fill in your details. We will confirm and send payment instructions on WhatsApp within 24 hours.</p>
+<p class="modal-sub hi">अपनी डिटेल्स भरें। हम 24 घंटे के अंदर WhatsApp पर कन्फर्मेशन और पेमेंट डिटेल्स भेजेंगे।</p>
+<form id="reg-form" onsubmit="submitForm(event)">
+<div class="form-row">
+<div class="form-group"><label class="en">Your Name *</label><label class="hi">आपका नाम *</label><input type="text" id="f-name" required minlength="2" pattern="^[A-Za-z\s]+$" title="Please enter a valid name using letters" placeholder="Full name"/></div>
+<div class="form-group"><label class="en">WhatsApp Number *</label><label class="hi">WhatsApp नंबर *</label><input type="tel" id="f-phone" required pattern="^[0-9]{10}$" title="Please enter a valid 10-digit WhatsApp number" placeholder="10-digit mobile number"/></div>
+</div>
+<div class="form-group"><label class="en">Email</label><label class="hi">ईमेल</label><input type="email" id="f-email" placeholder="your@email.com"/></div>
+<div class="form-row">
+<div class="form-group"><label class="en">Batch Preference *</label><label class="hi">कौनसा बैच? *</label>
+<select id="f-batch" required><option value="">-- Select --</option><option value="kids">School Student (Kids Batch)</option><option value="adult">Adult (Senior Batch)</option></select></div>
+<div class="form-group"><label class="en">City</label><label class="hi">शहर</label><input type="text" id="f-city" placeholder="e.g. Jaipur, Delhi..."/></div>
+</div>
+<div class="form-group"><label class="en">Project idea? (Optional)</label><label class="hi">प्रोजेक्ट आईडिया? (वैकल्पिक)</label><textarea id="f-project" placeholder="What would you love to build? Or say not sure yet..."></textarea></div>
+<div class="form-group"><label class="en">Who referred you? (Optional)</label><label class="hi">किसने रेफर किया? (वैकल्पिक)</label><input type="text" id="f-referral" placeholder="Their Phone Number"/></div>
+<button type="submit" class="form-submit"><span class="en">&#10022; Submit Registration</span><span class="hi">&#10022; रजिस्ट्रेशन सबमिट करें</span></button>
+<p class="form-note en">Registration fee &#8377;999 (non-refundable) payable to confirm your seat. Payment details will be shared on WhatsApp.</p>
+<p class="form-note hi">सीट पक्की करने के लिए ₹999 (नॉन-रिफंडेबल) देने होंगे। पेमेंट डिटेल्स WhatsApp पर शेयर की जाएंगी।</p>
+</form></div>
+<div class="form-success" id="form-success">
+<div class="success-icon">&#127881;</div>
+<h3 class="en">You're Registered!</h3><h3 class="hi">आपका रजिस्ट्रेशन हो गया!</h3>
+<p class="en">Our team will reach out on WhatsApp within 24 hours with seat confirmation and payment link. See you on May 9! &#128640;</p>
+<p class="hi">हमारी टीम 24 घंटे के अंदर WhatsApp पर पेमेंट लिंक और कन्फर्मेशन भेजेगी। मिलते हैं 9 मई को! &#128640;</p>
+</div></div></div>
+
+<script>
+function setLang(l){document.body.className="lang-"+l;document.getElementById("btn-en").classList.toggle("active",l==="en");document.getElementById("btn-hi").classList.toggle("active",l==="hi");try{localStorage.setItem("sl",l)}catch(e){}}
+(function(){try{var s=localStorage.getItem("sl");if(s==="hi")setLang("hi")}catch(e){}})();
+function openModal(){document.getElementById("modal").classList.add("open");document.body.style.overflow="hidden"}
+function closeModal(){document.getElementById("modal").classList.remove("open");document.body.style.overflow=""}
+function handleOverlayClick(e){if(e.target===document.getElementById("modal"))closeModal()}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+var SHEET_URL="https://script.google.com/macros/s/AKfycbwYv8My_SSHh6oR8PM1LgnvWzquoHs7SIagIfcrgOvEa6F1Wsx-bfSaWXkpmKWiYK3Y/exec";
+function submitForm(e){
+  e.preventDefault();
+  var btn=document.querySelector(".form-submit");
+  btn.disabled=true;btn.textContent="Submitting...";
+  var d={ts:new Date().toISOString(),name:document.getElementById("f-name").value,phone:document.getElementById("f-phone").value,email:document.getElementById("f-email").value,batch:document.getElementById("f-batch").value,city:document.getElementById("f-city").value,project:document.getElementById("f-project").value,referral:document.getElementById("f-referral").value};
+  if(SHEET_URL==="dummy"){setTimeout(showSuccess,500);return}
+  fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}).then(showSuccess).catch(showSuccess);
+}
+function showSuccess(){document.getElementById("form-body").style.display="none";document.getElementById("form-success").style.display="block"}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.style.opacity="1";e.target.style.transform="translateY(0)"}})},{threshold:.08});
+document.querySelectorAll(".audience-card,.project-card,.learn-item,.session-card,.tl-card,.disc-card,.fee-step,.contact-card").forEach(function(el){el.style.opacity="0";el.style.transform="translateY(18px)";el.style.transition="opacity 0.5s ease,transform 0.5s ease";io.observe(el)});
+</script>
+</body></html>
