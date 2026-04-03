@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spark Lab · Lock Your Seat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #1e1e2e;
+      --surface2: #252538;
+      --border: rgba(255,255,255,.08);
+      --border-bright: rgba(255,255,255,.14);
+      --accent: #7c5cfc;
+      --accent2: #a78bfa;
+      --accent3: #38bdf8;
+      --accent4: #f472b6;
+      --accent5: #34d399;
+      --gold: #fbbf24;
+      --red: #f87171;
+      --text: #f1f0ff;
+      --text2: #c4c2db;
+      --text3: #8b89a8;
+      --accent-dim: rgba(124,92,252,.12);
+      --accent-glow: rgba(124,92,252,.25);
+      --green: #34d399;
+      --green-dim: rgba(52,211,153,.12);
+      --border: rgba(255,255,255,.08);
+      --border-bright: rgba(255,255,255,.14);
+      --muted: #8b89a8;
+      --muted2: #555468;
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 60px;
+    }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 32px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-bolt {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .brand-name {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .badge-secure {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent5);
+      background: var(--green-dim);
+      border: 1px solid rgba(52,211,153,0.2);
+      padding: 5px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .badge-secure::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      width: 100%;
+      text-align: center;
+      padding-bottom: 32px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      background: rgba(124,92,252,.12);
+      border: 1px solid rgba(124,92,252,.3);
+      padding: 5px 16px;
+      border-radius: 50px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.7rem, 6vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 0%, var(--accent2) 50%, var(--accent3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+    }
+
+    .hero-sub {
+      font-size: 0.9rem;
+      color: var(--text3);
+      line-height: 1.6;
+    }
+
+    /* ── Amount card ── */
+    .amount-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .amount-left {}
+
+    .amount-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text3);
+      margin-bottom: 4px;
+    }
+
+    .amount-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .amount-note {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 5px;
+    }
+
+    .amount-right {
+      text-align: right;
+    }
+
+    .amount-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(251,191,36,.15);
+      color: var(--gold);
+      border: 1px solid rgba(251,191,36,.25);
+      border-radius: 50px;
+      padding: 5px 12px;
+    }
+
+    .amount-breakdown {
+      font-size: 0.72rem;
+      color: var(--text3);
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    .amount-breakdown s {
+      color: var(--muted2);
+    }
+
+    /* ── QR card ── */
+    .qr-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .qr-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qr-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .qr-card-title {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .qr-card-sub {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-left: auto;
+    }
+
+    .qr-body {
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .qr-frame {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .qr-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    /* Placeholder if no QR image yet */
+    .qr-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+    }
+
+    .qr-placeholder svg {
+      width: 120px;
+      height: 120px;
+      color: #333;
+    }
+
+    .qr-placeholder-text {
+      font-size: 0.6rem;
+      color: #888;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .qr-hint {
+      font-size: 0.78rem;
+      color: var(--text3);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .qr-hint strong {
+      color: var(--text2);
+      font-weight: 600;
+    }
+
+    /* ── UPI ID card ── */
+    .upi-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .upi-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .upi-body {
+      padding: 20px;
+    }
+
+    .upi-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
+      border: 1px solid var(--border-bright);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .upi-id-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--text);
+    }
+
+    .copy-btn {
+      background: rgba(124,92,252,.15);
+      border: 1px solid rgba(124,92,252,.3);
+      color: var(--accent2);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .copy-btn.copied {
+      background: var(--green-dim);
+      border-color: rgba(52,211,153,0.3);
+      color: var(--accent5);
+    }
+
+    /* ── After-payment note ── */
+    .after-note {
+      width: 100%;
+      background: rgba(124,92,252,.06);
+      border: 1px solid rgba(124,92,252,.25);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .after-note-title {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--accent2);
+    }
+
+    .after-note p {
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ── Instructor trust card ── */
+    .trust-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .trust-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-bright);
+      flex-shrink: 0;
+    }
+
+    .trust-text {}
+
+    .trust-name {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .trust-meta {
+      font-size: 0.75rem;
+      color: var(--text3);
+      line-height: 1.5;
+    }
+
+    .trust-meta a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    /* ── What's next checklist ── */
+    .checklist {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .checklist-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border-bright);
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+    }
+
+    .check-icon.done {
+      background: var(--green-dim);
+      border-color: rgba(52,211,153,0.3);
+      color: var(--accent5);
+    }
+
+    .check-icon.active {
+      background: rgba(124,92,252,.15);
+      border-color: rgba(124,92,252,.35);
+      color: var(--accent2);
+    }
+
+    .check-text strong {
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 1px;
+      color: var(--text2);
+    }
+
+    .check-text span {
+      font-size: 0.75rem;
+      color: var(--text3);
+    }
+
+    /* ── Footer ── */
+    footer {
+      width: 100%;
+      text-align: center;
+      padding-top: 8px;
+    }
+
+    .footer-brand {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--text3);
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    footer p {
+      font-size: 0.72rem;
+      color: var(--text3);
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 12px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      font-size: 0.7rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── UPI apps tags ── */
+    .upi-apps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .upi-apps-label {
+      font-size: 0.72rem;
+      color: var(--text3);
+      margin-right: 4px;
+    }
+
+    .app-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text3);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 3px 9px;
+    }
+
+    /* ── Animate in ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .wrap > * {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .wrap > *:nth-child(1) { animation-delay: 0.05s; }
+    .wrap > *:nth-child(2) { animation-delay: 0.1s; }
+    .wrap > *:nth-child(3) { animation-delay: 0.15s; }
+    .wrap > *:nth-child(4) { animation-delay: 0.2s; }
+    .wrap > *:nth-child(5) { animation-delay: 0.25s; }
+    .wrap > *:nth-child(6) { animation-delay: 0.3s; }
+    .wrap > *:nth-child(7) { animation-delay: 0.35s; }
+    .wrap > *:nth-child(8) { animation-delay: 0.4s; }
+    .wrap > *:nth-child(9) { animation-delay: 0.45s; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-bolt">⚡</span>
+        <span class="brand-name">Spark Lab</span>
+      </div>
+      <div class="badge-secure">Direct Payment</div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-eyebrow">Registration · May 2026</div>
+      <h1>Lock Your Seat.<br><em>One step left.</em></h1>
+      <p class="hero-sub">Pay the ₹999 registration fee to confirm your seat.<br>That's it. We'll handle the rest on WhatsApp.</p>
+    </div>
+
+    <!-- Amount -->
+    <div class="amount-card">
+      <div class="amount-left">
+        <div class="amount-label">Registration Fee</div>
+        <div class="amount-value">₹999</div>
+        <div class="amount-note">Non-refundable · Seat confirmation</div>
+      </div>
+      <div class="amount-right">
+        <div class="amount-tag">⚡ Early Bird Applied</div>
+        <div class="amount-breakdown">Full fee: <s>₹3,999</s><br>After discounts: ₹3,499</div>
+      </div>
+    </div>
+
+    <!-- QR Code -->
+    <div class="qr-card">
+      <div class="qr-card-header">
+        <div class="qr-step-num">1</div>
+        <div class="qr-card-title">Scan & Pay</div>
+      </div>
+      <div class="qr-body">
+        <div class="qr-frame">
+          <!-- Replace the src below with your actual QR image path, e.g. src="qr.png" -->
+          <img src="qr.png" />
+        </div>
+        <p class="qr-hint">Open any UPI app → tap <strong>Scan QR</strong> → point at this code.</p>
+      </div>
+    </div>
+
+    <div class="divider"><span>or pay via UPI ID</span></div>
+
+    <!-- UPI ID -->
+    <div class="upi-card">
+      <div class="upi-card-header">
+        <div class="qr-step-num">2</div>
+        <div class="qr-card-title">Copy UPI ID</div>
+      </div>
+      <div class="upi-body">
+        <div class="upi-row">
+          <!-- Replace with your actual UPI ID -->
+          <span class="upi-id-text" id="upi-id">sparklab@upi</span>
+          <button class="copy-btn" onclick="copyUPI()">Copy</button>
+        </div>
+        <div class="upi-apps">
+          <span class="upi-apps-label">Works on:</span>
+          <span class="app-tag">GPay</span>
+          <span class="app-tag">PhonePe</span>
+          <span class="app-tag">Paytm</span>
+          <span class="app-tag">BHIM</span>
+          <span class="app-tag">Any UPI App</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- After payment note -->
+    <div class="after-note">
+      <div class="after-note-title">⚡ That's it. You're in.</div>
+      <p>Once payment goes through, your seat is locked. We'll reach out on WhatsApp with session details and your final balance before April 30.</p>
+    </div>
+
+    <!-- Referral card -->
+    <div class="after-note" style="background:rgba(56,189,248,.06);border-color:rgba(56,189,248,.25);">
+      <div class="after-note-title" style="color:var(--accent3);">🤝 Bring a Friend. Pay Less.</div>
+      <p>Every friend or family member you refer gets you <strong style="color:var(--text2);">₹500 off your final fee</strong>. Bring two people and save ₹1,000. Bring four and the course practically pays for itself.<br><br>Just make sure they mention your name when they register.</p>
+    </div>
+
+    <!-- Instructor trust -->
+    <div class="trust-card">
+      <img
+        class="trust-avatar"
+        src="https://media.licdn.com/dms/image/v2/D4D03AQH2FCb-ZPCDhA/profile-displayphoto-scale_400_400/B4DZ1JnwgAIoAg-/0/1775056661330?e=1776902400&v=beta&t=9Yty968RiW8U7rcFeAzWE58iX3y7WuJ5zU4Mp0YnDEU"
+        alt="Himanshu Agarwal"
+      />
+      <div class="trust-text">
+        <div class="trust-name">Himanshu Agarwal</div>
+        <div class="trust-meta">
+          Your Instructor · BITS Pilani · PayU India<br>
+          <a href="https://linkedin.com/in/him9495" target="_blank">linkedin.com/in/him9495 ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's next -->
+    <div class="checklist">
+      <div class="checklist-header">Your journey</div>
+      <div class="checklist-item">
+        <div class="check-icon done">✓</div>
+        <div class="check-text">
+          <strong>Registration submitted</strong>
+          <span>Form filled & confirmed</span>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-icon active">→</div>
+        <div class="check-text">
+          <strong>Pay ₹999 to lock seat</strong>
+          <span>Right here, right now</span>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-icon">3</div>
+        <div class="check-text">
+          <strong>Discounts calculated by Apr 25</strong>
+          <span>Early bird + referral applied</span>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-icon">4</div>
+        <div class="check-text">
+          <strong>Pay balance & receive session link</strong>
+          <span>Before April 30</span>
+        </div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-icon">🚀</div>
+        <div class="check-text">
+          <strong>First session — May 9, 2026</strong>
+          <span>Come with curiosity. Leave with something built.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-brand">⚡ Spark Lab · May 2026</div>
+      <p>
+        Questions? <a href="https://wa.me/917737767776">WhatsApp us</a> · <a href="tel:+917737767776">Call us</a><br>
+        Online · Hindi &amp; English · AI-Powered
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    function copyUPI() {
+      const id = document.getElementById('upi-id').textContent;
+      navigator.clipboard.writeText(id).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
