@@ -559,8 +559,8 @@ linkedin.com/in/him9495</a>
 <button class="modal-close" onclick="closeModal()">&#10005;</button>
 <div id="form-body">
 <h2 class="en">Reserve Your Seat</h2><h2 class="hi">अपनी सीट बुक करें</h2>
-<p class="modal-sub en">Fill in your details. We will confirm and send payment instructions on WhatsApp within 24 hours.</p>
-<p class="modal-sub hi">अपनी डिटेल्स भरें। हम 24 घंटे के अंदर WhatsApp पर कन्फर्मेशन और पेमेंट डिटेल्स भेजेंगे।</p>
+<p class="modal-sub en">Fill in your details. You'll be taken directly to the payment page to lock your seat.</p>
+<p class="modal-sub hi">अपनी डिटेल्स भरें। रजिस्ट्रेशन के बाद आप सीधे पेमेंट पेज पर पहुंचेंगे और अपनी सीट पक्की कर सकेंगे।</p>
 <form id="reg-form" onsubmit="submitForm(event)">
 <div class="form-row">
 <div class="form-group"><label class="en">Your Name *</label><label class="hi">आपका नाम *</label><input type="text" id="f-name" required minlength="2" pattern="^[A-Za-z\s]+$" title="Please enter a valid name using letters" placeholder="Full name"/></div>
@@ -575,8 +575,8 @@ linkedin.com/in/him9495</a>
 <div class="form-group"><label class="en">Project idea? (Optional)</label><label class="hi">प्रोजेक्ट आईडिया? (वैकल्पिक)</label><textarea id="f-project" placeholder="What would you love to build? Or say not sure yet..."></textarea></div>
 <div class="form-group"><label class="en">Who referred you? (Optional)</label><label class="hi">किसने रेफर किया? (वैकल्पिक)</label><input type="text" id="f-referral" placeholder="Their Phone Number"/></div>
 <button type="submit" class="form-submit"><span class="en">&#10022; Submit Registration</span><span class="hi">&#10022; रजिस्ट्रेशन सबमिट करें</span></button>
-<p class="form-note en">Registration fee &#8377;999 (non-refundable) payable to confirm your seat. Payment details will be shared on WhatsApp.</p>
-<p class="form-note hi">सीट पक्की करने के लिए ₹999 (नॉन-रिफंडेबल) देने होंगे। पेमेंट डिटेल्स WhatsApp पर शेयर की जाएंगी।</p>
+<p class="form-note en">Registration fee ₹999 (non-refundable) payable to confirm your seat. You'll be taken to the payment page right after.</p>
+<p class="form-note hi">सीट पक्की करने के लिए ₹999 (नॉन-रिफंडेबल) देने होंगे। सबमिट करने के बाद आप सीधे पेमेंट पेज पर पहुंचेंगे।</p>
 </form></div>
 <div class="form-success" id="form-success">
 <div class="success-icon">&#127881;</div>
@@ -592,6 +592,7 @@ function openModal(){document.getElementById("modal").classList.add("open");docu
 function closeModal(){document.getElementById("modal").classList.remove("open");document.body.style.overflow=""}
 function handleOverlayClick(e){if(e.target===document.getElementById("modal"))closeModal()}
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
+
 var SHEET_URL="https://script.google.com/macros/s/AKfycbwYv8My_SSHh6oR8PM1LgnvWzquoHs7SIagIfcrgOvEa6F1Wsx-bfSaWXkpmKWiYK3Y/exec";
 function submitForm(e){
   e.preventDefault();
@@ -601,7 +602,7 @@ function submitForm(e){
   if(SHEET_URL==="dummy"){setTimeout(showSuccess,500);return}
   fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)}).then(showSuccess).catch(showSuccess);
 }
-function showSuccess(){document.getElementById("form-body").style.display="none";document.getElementById("form-success").style.display="block"}
+function showSuccess(){window.location.href="pay.html"}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.style.opacity="1";e.target.style.transform="translateY(0)"}})},{threshold:.08});
 document.querySelectorAll(".audience-card,.project-card,.learn-item,.session-card,.tl-card,.disc-card,.fee-step,.contact-card").forEach(function(el){el.style.opacity="0";el.style.transform="translateY(18px)";el.style.transition="opacity 0.5s ease,transform 0.5s ease";io.observe(el)});
 </script>
